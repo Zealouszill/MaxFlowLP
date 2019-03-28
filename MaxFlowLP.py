@@ -50,21 +50,53 @@ def MaxFlow(adjacencyList, startNode, endNode):
     # output of the third node.
 
 
+    # lp('objective', )
 
-    f_sa, f_sb, f_sc, f_ad, f_ba, f_bd, f_ce, f_dc, f_de, f_dt, f_et = vars\
+    f_sa, f_sb, f_sc, f_ad, f_ba, f_bd, f_ce, f_dc, f_de, f_dt, f_et = vars \
         ('f_sa, f_sb, f_sc, f_ad, f_ba, f_bd, f_ce, f_dc, f_de, f_dt, f_et')
 
+    print("The result is:*****************************************")
 
-    upperBound, lowerBound = vars('upperBound, lowerBound')
+    returnedListOfConstraints, totalFlow, edgeDictionary = lp('max', f_sa + f_sb + f_sc, [f_sa >= 0, f_sb >= 0, f_sc >= 0,
+                                   f_ad >= 0, f_ba >= 0, f_bd >= 0,
+                                   f_ce >= 0, f_dc >= 0, f_de >= 0,
+                                   f_dt >= 0, f_et >= 0,
+
+                                   f_sa <= 3, f_sb <= 3, f_sc <= 4,
+                                   f_ad <= 2, f_ba <= 10, f_bd <= 1,
+                                   f_ce <= 5, f_dc <= 1, f_de <= 1,
+                                   f_dt <= 2, f_et <= 5,
+
+                                   f_sa + f_ba <= f_ad,
+                                   f_sb <= f_ba + f_bd,
+                                   f_sc + f_dc <= f_ce,
+                                   f_ad + f_bd <= f_dc + f_de + f_dt,
+                                   f_de + f_ce <= f_et])
+
+    # All the details of the variabels and the contraints.
+    print("returnedListOfConstraints", returnedListOfConstraints)
+
+    # The max value that can be outputed.
+    print("totalFlow", totalFlow)
+
+    # Flow used for each of the tubes.
+    print("edgeDictionary", edgeDictionary)
+
+
+
+
+
+    listOfVariables = []
+
+    for i in adjacencyList:
+        for j in range(len(adjacencyList[i])):
+            listOfVariables.append(adjacencyList[i][j][1])
 
     tempConstraint = 0
     constraints = []
 
     for i in adjacencyList:
         for j in range(len(adjacencyList[i])):
-            print("iteration")
-            print("i", i)
-            print("j", j)
 
             tempConstraint = tempConstraint + adjacencyList[i][j][1]
             print("tc", tempConstraint)
@@ -72,7 +104,6 @@ def MaxFlow(adjacencyList, startNode, endNode):
         constraints.append(tempConstraint)
         tempConstraint = 0
 
-    # lp('objective', )
 
     for i in constraints:
         print(constraints)
