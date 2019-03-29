@@ -55,6 +55,15 @@ def MaxFlow(adjacencyList, startNode, endNode):
     f_sa, f_sb, f_sc, f_ad, f_ba, f_bd, f_ce, f_dc, f_de, f_dt, f_et = vars \
         ('f_sa, f_sb, f_sc, f_ad, f_ba, f_bd, f_ce, f_dc, f_de, f_dt, f_et')
 
+    maxConstraint = 0
+
+    for i in adjacencyList:
+        for j in range(len(adjacencyList[i])):
+            if adjacencyList[i][j][0] == startNode:
+                maxConstraint = maxConstraint + adjacencyList[i][j][2]
+
+    print("Max Constraint is:", f_sa + f_sb + f_sc)
+
     print("The result is:*****************************************")
 
     returnedListOfConstraints, totalFlow, edgeDictionary = lp('max', f_sa + f_sb + f_sc, [f_sa >= 0, f_sb >= 0, f_sc >= 0,
@@ -90,7 +99,7 @@ def MaxFlow(adjacencyList, startNode, endNode):
 
     for i in adjacencyList:
         for j in range(len(adjacencyList[i])):
-            listOfVariables.append(adjacencyList[i][j][1])
+            listOfVariables.append(adjacencyList[i][j][2])
 
     tempConstraint = 0
     constraints = []
@@ -98,17 +107,17 @@ def MaxFlow(adjacencyList, startNode, endNode):
     for i in adjacencyList:
         for j in range(len(adjacencyList[i])):
 
-            tempConstraint = tempConstraint + adjacencyList[i][j][1]
-            print("tc", tempConstraint)
+            tempConstraint = tempConstraint + adjacencyList[i][j][2]
+            # print("tc", tempConstraint)
 
         constraints.append(tempConstraint)
         tempConstraint = 0
 
 
     for i in constraints:
-        print(constraints)
+        pass # print(constraints)
 
-    return edgeDictionary, totalFlow
+    return edgeDictionar, totalFlow
 
 def test_MaxFlowFunction():
 
@@ -125,41 +134,51 @@ def test_adjacencyListCreation():
 
     adjacencyList = defaultdict(list)
 
-    adjacencyList[0].extend([["d", 2]])
-    adjacencyList[1].extend([["a", 10],["d", 1]])
-    adjacencyList[2].extend([["e", 5]])
-    adjacencyList[3].extend([["t", 2],["e", 1],["c", 1]])
-    adjacencyList[4].extend([["t", 5]])
-    adjacencyList[5].extend([["a", 3], ["b", 3], ["c", 4]])
+    adjacencyList[0].extend([["a", "d", 2]])
+    adjacencyList[1].extend([["b", "a", 10],["b", "d", 1]])
+    adjacencyList[2].extend([["c", "e", 5]])
+    adjacencyList[3].extend([["d", "t", 2],["d", "e", 1],["d", "c", 1]])
+    adjacencyList[4].extend([["e", "t", 5]])
+    adjacencyList[5].extend([["s", "a", 3], ["s", "b", 3], ["s", "c", 4]])
 
 
+    assert adjacencyList[0][0][0] == "a"
+    assert adjacencyList[0][0][1] == "d"
+    assert adjacencyList[0][0][2] == 2
 
-    assert adjacencyList[0][0][0] == "d"
-    assert adjacencyList[0][0][1] == 2
+    assert adjacencyList[1][0][0] == "b"
+    assert adjacencyList[1][0][1] == "a"
+    assert adjacencyList[1][0][2] == 10
+    assert adjacencyList[1][0][0] == "b"
+    assert adjacencyList[1][1][1] == "d"
+    assert adjacencyList[1][1][2] == 1
 
-    assert adjacencyList[1][0][0] == "a"
-    assert adjacencyList[1][0][1] == 10
-    assert adjacencyList[1][1][0] == "d"
-    assert adjacencyList[1][1][1] == 1
+    assert adjacencyList[2][0][0] == "c"
+    assert adjacencyList[2][0][1] == "e"
+    assert adjacencyList[2][0][2] == 5
 
-    assert adjacencyList[2][0][0] == "e"
-    assert adjacencyList[2][0][1] == 5
+    assert adjacencyList[3][0][0] == "d"
+    assert adjacencyList[3][0][1] == "t"
+    assert adjacencyList[3][0][2] == 2
+    assert adjacencyList[3][0][0] == "d"
+    assert adjacencyList[3][1][1] == "e"
+    assert adjacencyList[3][1][2] == 1
+    assert adjacencyList[3][0][0] == "d"
+    assert adjacencyList[3][2][1] == "c"
+    assert adjacencyList[3][2][2] == 1
 
-    assert adjacencyList[3][0][0] == "t"
-    assert adjacencyList[3][0][1] == 2
-    assert adjacencyList[3][1][0] == "e"
-    assert adjacencyList[3][1][1] == 1
-    assert adjacencyList[3][2][0] == "c"
-    assert adjacencyList[3][2][1] == 1
+    assert adjacencyList[4][0][0] == "e"
+    assert adjacencyList[4][0][1] == "t"
+    assert adjacencyList[4][0][2] == 5
 
-    assert adjacencyList[4][0][0] == "t"
-    assert adjacencyList[4][0][1] == 5
-
-    assert adjacencyList[5][0][0] == "a"
-    assert adjacencyList[5][0][1] == 3
-    assert adjacencyList[5][1][0] == "b"
-    assert adjacencyList[5][1][1] == 3
-    assert adjacencyList[5][2][0] == "c"
-    assert adjacencyList[5][2][1] == 4
+    assert adjacencyList[5][0][0] == "s"
+    assert adjacencyList[5][0][1] == "a"
+    assert adjacencyList[5][0][2] == 3
+    assert adjacencyList[5][0][0] == "s"
+    assert adjacencyList[5][1][1] == "b"
+    assert adjacencyList[5][1][2] == 3
+    assert adjacencyList[5][0][0] == "s"
+    assert adjacencyList[5][2][1] == "c"
+    assert adjacencyList[5][2][2] == 4
 
     return adjacencyList
