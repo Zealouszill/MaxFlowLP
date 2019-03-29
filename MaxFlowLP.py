@@ -33,7 +33,6 @@ def lp(mode, objective, constraints):
 
 def MaxFlow(adjacencyList, startNode, endNode):
 
-
     # x_1, x_2 = vars('x_1, x_2')
     #
     # lp('max', x_1 + 6 * x_2, [
@@ -50,22 +49,38 @@ def MaxFlow(adjacencyList, startNode, endNode):
     # Constraint of f_sc + f_dc = f_ce. The flow can't be greater going from two nodes into the
     # output of the third node.
 
-
-    # lp('objective', )
-
-
-    maxConstraint = 0
     listOfVariablesTemp = []
-    listOfVariables = defaultdict(list)
+    listOfVariables = {}
+    constraints = []
+    inWeight = defaultdict(list)
+    outWeight = defaultdict(list)
+
+    # tempInWeight = 0
+    # tempOutWeight = 0
+
+    # for i in adjacencyList:
+    #     for j in range(len(adjacencyList[i])):
+    #         if adjacencyList[i][j][0] == startNode:
+    #             maxConstraint = maxConstraint + adjacencyList[i][j][2]
 
     for i in adjacencyList:
         for j in range(len(adjacencyList[i])):
-            if adjacencyList[i][j][0] == startNode:
-                maxConstraint = maxConstraint + adjacencyList[i][j][2]
+            pass
+            # listOfVariablesTemp.append(
+            #     LpVariable(("f_" + adjacencyList[i][j][0] + adjacencyList[i][j][1]), 0, adjacencyList[i][j][2]))
 
-    for i in adjacencyList:
-        for j in range(len(adjacencyList[i])):
-            listOfVariablesTemp.append("f_" + adjacencyList[i][j][0] + adjacencyList[i][j][1])
+    for (i, j) in adjacencyList:
+        print(adjacencyList[i,j][0])
+        listOfVariables[i,j] = LpVariable("f_" + i + j, 0, adjacencyList[i,j][0])
+
+        # inWeight[j].add(i)
+        # outWeight[i].add(j)
+
+    print("inweight", inWeight)
+    print("outweight", outWeight)
+
+
+    # constraints.append()
 
     print("A list", listOfVariablesTemp)
 
@@ -73,34 +88,57 @@ def MaxFlow(adjacencyList, startNode, endNode):
 
     # temp = listOfVariablesTemp[0] + 1
 
-    for i in listOfVariablesTemp:
-        listOfVariables[0].extend(vars(listOfVariablesTemp[i]))
+    # for i in listOfVariablesTemp:
+    #     listOfVariables[0].extend(vars(listOfVariablesTemp[i]))
 
     print("A list", listOfVariables)
 
 
-    print("Max Constraint is:", f_sa + f_sb + f_sc)
+
+
+    # for i in adjacencyList:
+    #     for j in range(len(adjacencyList[i])):
+    #         listOfVariables.append(adjacencyList[i][j][2])
+    #
+    # tempConstraint = 0
+    #
+    #
+    # for i in adjacencyList:
+    #     for j in range(len(adjacencyList[i])):
+    #
+    #         tempConstraint = tempConstraint + adjacencyList[i][j][2]
+    #         # print("tc", tempConstraint)
+    #
+    #     constraints.append(tempConstraint)
+    #     tempConstraint = 0
+    #
+    #
+    # for i in constraints:
+    #     pass # print(constraints)
 
     print("The result is:*****************************************")
 
     f_sa, f_sb, f_sc, f_ad, f_ba, f_bd, f_ce, f_dc, f_de, f_dt, f_et = vars \
         ('f_sa, f_sb, f_sc, f_ad, f_ba, f_bd, f_ce, f_dc, f_de, f_dt, f_et')
 
-    returnedListOfConstraints, totalFlow, edgeDictionary = lp('max', f_sa + f_sb + f_sc, [f_sa >= 0, f_sb >= 0, f_sc >= 0,
-                                   f_ad >= 0, f_ba >= 0, f_bd >= 0,
-                                   f_ce >= 0, f_dc >= 0, f_de >= 0,
-                                   f_dt >= 0, f_et >= 0,
+    print("Max Constraint is:", f_sa + f_sb + f_sc)
 
-                                   f_sa <= 3, f_sb <= 3, f_sc <= 4,
-                                   f_ad <= 2, f_ba <= 10, f_bd <= 1,
-                                   f_ce <= 5, f_dc <= 1, f_de <= 1,
-                                   f_dt <= 2, f_et <= 5,
+    returnedListOfConstraints, totalFlow, edgeDictionary = lp('max', f_sa + f_sb + f_sc,
+                                                              [f_sa >= 0, f_sb >= 0, f_sc >= 0,
+                                                               f_ad >= 0, f_ba >= 0, f_bd >= 0,
+                                                               f_ce >= 0, f_dc >= 0, f_de >= 0,
+                                                               f_dt >= 0, f_et >= 0,
 
-                                   f_sa + f_ba <= f_ad,
-                                   f_sb <= f_ba + f_bd,
-                                   f_sc + f_dc <= f_ce,
-                                   f_ad + f_bd <= f_dc + f_de + f_dt,
-                                   f_de + f_ce <= f_et])
+                                                               f_sa <= 3, f_sb <= 3, f_sc <= 4,
+                                                               f_ad <= 2, f_ba <= 10, f_bd <= 1,
+                                                               f_ce <= 5, f_dc <= 1, f_de <= 1,
+                                                               f_dt <= 2, f_et <= 5,
+
+                                                               f_sa + f_ba <= f_ad,
+                                                               f_sb <= f_ba + f_bd,
+                                                               f_sc + f_dc <= f_ce,
+                                                               f_ad + f_bd <= f_dc + f_de + f_dt,
+                                                               f_de + f_ce <= f_et])
 
     # All the details of the variabels and the contraints.
     # print("returnedListOfConstraints", returnedListOfConstraints)
@@ -112,32 +150,7 @@ def MaxFlow(adjacencyList, startNode, endNode):
     print("edgeDictionary", edgeDictionary)
 
 
-
-
-
-
-
-    for i in adjacencyList:
-        for j in range(len(adjacencyList[i])):
-            listOfVariables.append(adjacencyList[i][j][2])
-
-    tempConstraint = 0
-    constraints = []
-
-    for i in adjacencyList:
-        for j in range(len(adjacencyList[i])):
-
-            tempConstraint = tempConstraint + adjacencyList[i][j][2]
-            # print("tc", tempConstraint)
-
-        constraints.append(tempConstraint)
-        tempConstraint = 0
-
-
-    for i in constraints:
-        pass # print(constraints)
-
-    return edgeDictionar, totalFlow
+    return edgeDictionary, totalFlow
 
 def test_MaxFlowFunction():
 
@@ -154,51 +167,28 @@ def test_adjacencyListCreation():
 
     adjacencyList = defaultdict(list)
 
-    adjacencyList[0].extend([["a", "d", 2]])
-    adjacencyList[1].extend([["b", "a", 10],["b", "d", 1]])
-    adjacencyList[2].extend([["c", "e", 5]])
-    adjacencyList[3].extend([["d", "t", 2],["d", "e", 1],["d", "c", 1]])
-    adjacencyList[4].extend([["e", "t", 5]])
-    adjacencyList[5].extend([["s", "a", 3], ["s", "b", 3], ["s", "c", 4]])
+    adjacencyList["a", "d"].extend([2])
+    adjacencyList["b", "a"].extend([10])
+    adjacencyList["b", "d"].extend([1])
+    adjacencyList["c", "e"].extend([5])
+    adjacencyList["d", "t"].extend([2])
+    adjacencyList["d", "e"].extend([1])
+    adjacencyList["d", "c"].extend([1])
+    adjacencyList["e", "t"].extend([5])
+    adjacencyList["s", "a"].extend([3])
+    adjacencyList["s", "b"].extend([3])
+    adjacencyList["s", "c"].extend([4])
 
-
-    assert adjacencyList[0][0][0] == "a"
-    assert adjacencyList[0][0][1] == "d"
-    assert adjacencyList[0][0][2] == 2
-
-    assert adjacencyList[1][0][0] == "b"
-    assert adjacencyList[1][0][1] == "a"
-    assert adjacencyList[1][0][2] == 10
-    assert adjacencyList[1][0][0] == "b"
-    assert adjacencyList[1][1][1] == "d"
-    assert adjacencyList[1][1][2] == 1
-
-    assert adjacencyList[2][0][0] == "c"
-    assert adjacencyList[2][0][1] == "e"
-    assert adjacencyList[2][0][2] == 5
-
-    assert adjacencyList[3][0][0] == "d"
-    assert adjacencyList[3][0][1] == "t"
-    assert adjacencyList[3][0][2] == 2
-    assert adjacencyList[3][0][0] == "d"
-    assert adjacencyList[3][1][1] == "e"
-    assert adjacencyList[3][1][2] == 1
-    assert adjacencyList[3][0][0] == "d"
-    assert adjacencyList[3][2][1] == "c"
-    assert adjacencyList[3][2][2] == 1
-
-    assert adjacencyList[4][0][0] == "e"
-    assert adjacencyList[4][0][1] == "t"
-    assert adjacencyList[4][0][2] == 5
-
-    assert adjacencyList[5][0][0] == "s"
-    assert adjacencyList[5][0][1] == "a"
-    assert adjacencyList[5][0][2] == 3
-    assert adjacencyList[5][0][0] == "s"
-    assert adjacencyList[5][1][1] == "b"
-    assert adjacencyList[5][1][2] == 3
-    assert adjacencyList[5][0][0] == "s"
-    assert adjacencyList[5][2][1] == "c"
-    assert adjacencyList[5][2][2] == 4
+    assert adjacencyList["a", "d"] == [2]
+    assert adjacencyList["b", "a"] == [10]
+    assert adjacencyList["b", "d"] == [1]
+    assert adjacencyList["c", "e"] == [5]
+    assert adjacencyList["d", "t"] == [2]
+    assert adjacencyList["d", "e"] == [1]
+    assert adjacencyList["d", "c"] == [1]
+    assert adjacencyList["e", "t"] == [5]
+    assert adjacencyList["s", "a"] == [3]
+    assert adjacencyList["s", "b"] == [3]
+    assert adjacencyList["s", "c"] == [4]
 
     return adjacencyList
