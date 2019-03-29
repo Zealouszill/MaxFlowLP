@@ -15,6 +15,7 @@ def vars(s, low=None, high=None):
     return tuple(LpVariable(v.strip(), low, high) for v in s.split(','))
 
 
+
 def lp(mode, objective, constraints):
     """see lp1 below for an example"""
 
@@ -52,19 +53,38 @@ def MaxFlow(adjacencyList, startNode, endNode):
 
     # lp('objective', )
 
-    f_sa, f_sb, f_sc, f_ad, f_ba, f_bd, f_ce, f_dc, f_de, f_dt, f_et = vars \
-        ('f_sa, f_sb, f_sc, f_ad, f_ba, f_bd, f_ce, f_dc, f_de, f_dt, f_et')
 
     maxConstraint = 0
+    listOfVariablesTemp = []
+    listOfVariables = defaultdict(list)
 
     for i in adjacencyList:
         for j in range(len(adjacencyList[i])):
             if adjacencyList[i][j][0] == startNode:
                 maxConstraint = maxConstraint + adjacencyList[i][j][2]
 
+    for i in adjacencyList:
+        for j in range(len(adjacencyList[i])):
+            listOfVariablesTemp.append("f_" + adjacencyList[i][j][0] + adjacencyList[i][j][1])
+
+    print("A list", listOfVariablesTemp)
+
+
+
+    # temp = listOfVariablesTemp[0] + 1
+
+    for i in listOfVariablesTemp:
+        listOfVariables[0].extend(vars(listOfVariablesTemp[i]))
+
+    print("A list", listOfVariables)
+
+
     print("Max Constraint is:", f_sa + f_sb + f_sc)
 
     print("The result is:*****************************************")
+
+    f_sa, f_sb, f_sc, f_ad, f_ba, f_bd, f_ce, f_dc, f_de, f_dt, f_et = vars \
+        ('f_sa, f_sb, f_sc, f_ad, f_ba, f_bd, f_ce, f_dc, f_de, f_dt, f_et')
 
     returnedListOfConstraints, totalFlow, edgeDictionary = lp('max', f_sa + f_sb + f_sc, [f_sa >= 0, f_sb >= 0, f_sc >= 0,
                                    f_ad >= 0, f_ba >= 0, f_bd >= 0,
@@ -83,7 +103,7 @@ def MaxFlow(adjacencyList, startNode, endNode):
                                    f_de + f_ce <= f_et])
 
     # All the details of the variabels and the contraints.
-    print("returnedListOfConstraints", returnedListOfConstraints)
+    # print("returnedListOfConstraints", returnedListOfConstraints)
 
     # The max value that can be outputed.
     print("totalFlow", totalFlow)
@@ -95,7 +115,7 @@ def MaxFlow(adjacencyList, startNode, endNode):
 
 
 
-    listOfVariables = []
+
 
     for i in adjacencyList:
         for j in range(len(adjacencyList[i])):
